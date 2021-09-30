@@ -43,6 +43,7 @@ import logging
 version = '3.0'
 
 urlbase = 'http://zh.wikipedia.org/'
+SPACES_RE = re.compile(r'[\u00A0\u200B\uFEFF]')
 
 # ----------------------------------------------------------------------
 
@@ -194,14 +195,18 @@ def process_dump(input_file, out_file, file_size, file_compress):
             # drop references:
             # ^ The Penguin Dictionary
             text = re.sub(r'  \^ .*', '', text)
+            # remove NBSP
+            text = re.sub(SPACES_RE, '', text)
             # url = urlbase + 'wiki?curid=' + id
             # header = '<doc id="%s" url="%s" title="%s" language="%s" revision="%s">\n' % (id, url, title, language, revision)
             # page = header + title + '\n\n' + text + '\n</doc>\n'
             # output.write(page.encode('utf-8'))
             
             # only output text
-            page = f"{text}\n"
-            output.write(page)
+            page = {"source": {"name": "wiki"}, "title": title, "content": text}
+            # output.write(page)
+            json.dump(page, output, ensure_ascii=False)
+            output.write('\n')
 
 # ----------------------------------------------------------------------
 
