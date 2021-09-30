@@ -198,7 +198,9 @@ def process_dump(input_file, out_file, file_size, file_compress):
             # header = '<doc id="%s" url="%s" title="%s" language="%s" revision="%s">\n' % (id, url, title, language, revision)
             # page = header + title + '\n\n' + text + '\n</doc>\n'
             # output.write(page.encode('utf-8'))
-            page = f"{title}\t{text}\n"
+            
+            # only output text
+            page = f"{text}\n"
             output.write(page)
 
 # ----------------------------------------------------------------------
